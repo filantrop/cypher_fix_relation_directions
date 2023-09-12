@@ -13,8 +13,8 @@ from core.core_classes import SchemaParser
 from core.schema_rules import SchemaRules
 
 # from parse_antlr_to_neo4j.language.hello.FixRelationsDirectionsListener import FixRelationsDirectionsListener
-from parse_antlr_to_cypher.language.hello.FixRelationsDirectionsParser import FixRelationsDirectionsParser
-from parse_antlr_to_cypher.language.hello.FixRelationsDirectionsLexer import FixRelationsDirectionsLexer
+from parse_antlr_to_cypher.FixRelationsDirectionsParser import FixRelationsDirectionsParser
+from parse_antlr_to_cypher.FixRelationsDirectionsLexer import FixRelationsDirectionsLexer
 
 
 class FixDirections():
