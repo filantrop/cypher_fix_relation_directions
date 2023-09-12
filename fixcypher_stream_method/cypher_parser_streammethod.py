@@ -86,19 +86,19 @@ class CypherParser:
         self.next_character()
         self.skip_whitespaces()
 
-        self.validate_node()
+        self.validate_if_next_is_a_node()
 
-    def validate_node(self):
+    def validate_if_next_is_a_node(self):
         """ Find and validate found node. Then add any relation. Otherwise starts over and tries to find the next node
         """
         if self.current_character == "":
             return
         # Look for node
-        found_node = self.find_node()
+        found_node = self.parse_if_node()
 
         # if first_node is None and tmp_node.status & NodeFlag.NODE_NOT_FOUND:
         if found_node.status & NodeFlag.NODE_NOT_FOUND:
-            self.validate_node()
+            self.validate_if_next_is_a_node()
 
         # If node is found set node
         if found_node.status & NodeFlag.NODE_FOUND:
@@ -124,22 +124,22 @@ class CypherParser:
                 self.current_triple.first_node = second_node
 
                 # Try to find relation
-                self.validate_relation()
+                self.validate_if_next_is_a_relation()
 
             # Save node value and labels in dictionary if criteria is met
             self.triples_repository.save_node_variable_and_label(found_node)
 
-            self.validate_relation()
+            self.validate_if_next_is_a_relation()
 
-            self.validate_node()
+            self.validate_if_next_is_a_node()
 
-    def validate_relation(self):
+    def validate_if_next_is_a_relation(self):
         """Find and validate any relationship, otherwise continue to find the next node.
         """
         if self.current_character == "":
             return
 
-        relation = self.find_relation()
+        relation = self.parse_if_relation()
 
         self.skip_whitespaces()
 
@@ -151,11 +151,11 @@ class CypherParser:
             self.current_triple = None
 
         self.skip_whitespaces()
-        self.validate_node()
+        self.validate_if_next_is_a_node()
 
 
 
-    def find_node(self):
+    def parse_if_node(self):
         """
         Check if the next character in the stream is a valid start of a node.
         In this case left parenthesis. Then parses the node from the rules.
@@ -217,7 +217,7 @@ class CypherParser:
 
 
 
-    def find_relation(self):
+    def parse_if_relation(self):
         """
         Check if the next character in the stream is a valid start of a relation.
         In this case hyphen. Then parses the relation from the rules.

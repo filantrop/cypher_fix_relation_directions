@@ -18,7 +18,7 @@ def test_EmptyNode_ShouldReturnNothingEndWithCharacterEnd():
     cp = CypherParser(cypher)
 
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert n.variable==variable
     assert len(n.labels)==0
@@ -32,7 +32,7 @@ def test_NodeWithVariable_ShouldReturnNothingEndWithCharacterEnd():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert len(n.labels)==0
@@ -48,7 +48,7 @@ def test_ParseSimpleLabelShouldReturnLabel():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label==n.labels[0]
@@ -61,7 +61,7 @@ def test_ParseMultipleLabels_ShouldReturnLabel():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert n.labels[0]=='Person'
@@ -74,7 +74,7 @@ def test_ParseMultipleLabelsWithVariable_ShouldReturnLabel():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert n.variable=="person"
     assert n.labels[0]=='Person'
@@ -89,7 +89,7 @@ def test_ParseSimpleNodeWithVariableAndLabel_ShouldExtractVariableAndLabel():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label==n.labels[0]
@@ -120,7 +120,7 @@ def test_Spaces_ParseNodeWithVariableAndLabel_ShouldExtractVariableAndLabel():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label==n.labels[0]
@@ -137,7 +137,7 @@ def test_MultipleSpaceTypes_ParseNodeWithVariableAndLabelAnd_ShouldExtractVariab
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label==n.labels[0]
@@ -152,7 +152,7 @@ def test_SkipEscapeSigns_ParseNodeWithVariableAndLabelAnd_ShouldReturnNoNodeFoun
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert len(n.labels)==0
@@ -166,7 +166,7 @@ def test_SkipEscapeSigns_ParseNodeWithVariableAndLabelAnd_ShouldReturnValidNode(
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label == n.labels[0]
@@ -215,7 +215,7 @@ def test_SkipPropertyBlock_ParseNodeWithVariableAndLabelAnd_ShouldReturnValidNod
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label == n.labels[0]
@@ -229,7 +229,7 @@ def test_SkipPropertyBlockWithMultipleProperties_ParseNodeWithVariableAndLabelAn
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label == n.labels[0]
@@ -311,7 +311,7 @@ def test_SkipPropertyBlockWithMultipleProperties_ParseNodeWithVariableAndLabelAn
 
     cp = CypherParser(cypher)
     cp.next_character()
-    n = cp.find_node()
+    n = cp.parse_if_node()
 
     assert variable==n.variable
     assert label == n.labels[0]
@@ -327,7 +327,7 @@ def test_OnlyRelationWithoutDirection_ShouldReturnValidRelation():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    r = cp.find_relation()
+    r = cp.parse_if_relation()
 
     assert r.left==CypherParser.HYPHEN
     assert r.right==CypherParser.HYPHEN
@@ -347,7 +347,7 @@ def test_OnlyRelationWitLeftDirection_ShouldReturnValidRelation():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    r = cp.find_relation()
+    r = cp.parse_if_relation()
 
     assert r.left=="<-"
     assert r.right=="-"
@@ -368,7 +368,7 @@ def test_OnlyRelationWithRightDirection_ShouldReturnValidRelation():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    r = cp.find_relation()
+    r = cp.parse_if_relation()
 
     assert r.left=="-"
     assert r.right=="->"
@@ -388,7 +388,7 @@ def test_RelationWithDirectionAndRelationVariable_ShouldReturnValidRelation():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    r = cp.find_relation()
+    r = cp.parse_if_relation()
 
     assert r.left=="-"
     assert r.right=="->"
@@ -409,7 +409,7 @@ def test_FullRelationWithBody_ShouldReturnValidRelation():
 
     cp = CypherParser(cypher)
     cp.next_character()
-    r = cp.find_relation()
+    r = cp.parse_if_relation()
 
     assert r.left=="<-"
     assert r.right=="-"
@@ -441,7 +441,7 @@ def test_FullRelationWithBodyWithMultipleRows_ShouldReturnValidRelation():
 
     cyp = CypherParser(cypher)
     cyp.next_character()
-    rel = cyp.find_relation()
+    rel = cyp.parse_if_relation()
 
     assert rel.left=="<-"
     assert rel.right=="-"

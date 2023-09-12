@@ -7,10 +7,11 @@ import os, timeit
 import pandas as pd
 from core.core_classes import SchemaParser
 from core.schema_rules import SchemaRules
-from fixcypher_ast_method.cypher_parser_ast_method import CypherParser
+from fixcypher_ast_method.fixdirections_astmethod import FixDirections
+# from fixcypher_ast_method.cypher_parser_ast_method import CypherParser
 
 schema_parser = SchemaParser()
-cypher_parser = CypherParser()
+# cypher_parser = CypherParser()
 
 
 def do_work_on_testdata(df,verbose=0):
@@ -31,20 +32,22 @@ def do_work_on_testdata(df,verbose=0):
             correct_query = ''
 
 
-        # Extract schema and variables
-
+        # Extract schema and variables, only for verbose
         schema_list =  schema_parser.extract_schemas(schema)
 
-        cypher_parser.find_and_prepare_all_triples(query)
 
 
 
-        for triple in cypher_parser.triples_repository.triples:
-              SchemaRules.validate_direction_change(triple, schema_list)
-
-        query_fixed = SchemaRules.fix_all_arrow_directions_from_triples(query, cypher_parser.triples_repository.triples )
+        # cypher_parser.find_and_prepare_all_triples(query)
 
 
+
+        # for triple in cypher_parser.triples_repository.triples:
+        #       SchemaRules.validate_direction_change(triple, schema_list)
+
+        # query_fixed = SchemaRules.fix_all_arrow_directions_from_triples(query, cypher_parser.triples_repository.triples )
+
+        query_fixed = FixDirections.fix_cypher_relations_directions(query,schema)
 
         schema_array = []
         for schema in schema_list:
@@ -58,7 +61,7 @@ def do_work_on_testdata(df,verbose=0):
             p(f"---- Row {row_index}:",1)
             p("--------------------------------------")
 
-            p(f"Triples: {to_string(cypher_parser.triples_repository.triples)}")
+            #p(f"Triples: {to_string(cypher_parser.triples_repository.triples)}")
 
             p(f"Schemas: {to_string(schema_list)}")
             p(f"    schema = '{','.join(schema_array)}'")
