@@ -185,8 +185,6 @@ class SchemaRules:
                     triple.schema_validated_direction = DirectionFlag.DESTINATION_TO_SOURCE
                     return True
 
-
-            #return False
         return False
 
     # Rule 6
@@ -202,8 +200,6 @@ class SchemaRules:
             bool: return True if match, else false
         """
 
-        # valid_type = SchemaRules.has_a_valid_type(triple.relation,schemas):
-            # return False
 
         for schema in schemas:
             relation_type = SchemaRules.validate_relation_type(triple.relation,schema)
@@ -211,17 +207,21 @@ class SchemaRules:
             if  schema.source in source_node.labels and \
                 schema.destination in destination_node.labels:
                 triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
-                #(:Person)-[X]->(:Organization)
+
+                # (:Person)-[X]->(:Organization)
                 if triple.direction & DirectionFlag.SOURCE_TO_DESTINATION:
+
                     # triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
                     if  RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
                         return True
                     else:
                         continue
-                #(:Person)<-[X]-(:Organization)
+
+                # (:Person)<-[X]-(:Organization)
                 elif triple.direction & DirectionFlag.DESTINATION_TO_SOURCE:
-                    #triple.schema_validated_direction = DirectionFlag.DESTINATION_TO_SOURCE
+
+                    # triple.schema_validated_direction = DirectionFlag.DESTINATION_TO_SOURCE
                     # triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
                     if RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
@@ -229,6 +229,7 @@ class SchemaRules:
                     else:
                         continue
                 elif triple.direction & DirectionFlag.UNDIRECTED:
+
                     # triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
                     if RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
@@ -237,12 +238,15 @@ class SchemaRules:
                         continue
                 else:
                     return False
+
             # Cypher: (:Organization) [X] (:Person), Schema: (:Person)-[:WORKS_AT]->(:Organization)
             elif   schema.source in destination_node.labels and\
                    schema.destination in source_node.labels:
                 triple.schema_validated_direction = DirectionFlag.DESTINATION_TO_SOURCE
+
                 # (:Organization)-[X]->(:Person)
                 if triple.direction & DirectionFlag.SOURCE_TO_DESTINATION:
+
                     # triple.schema_validated_direction = DirectionFlag.DESTINATION_TO_SOURCE
                     if RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
@@ -252,6 +256,7 @@ class SchemaRules:
 
                 # (:Organization)<-[X]-(:Person)
                 elif triple.direction & DirectionFlag.DESTINATION_TO_SOURCE:
+
                     # triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
                     if RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
@@ -259,6 +264,7 @@ class SchemaRules:
                     else:
                         continue
                 elif triple.direction & DirectionFlag.UNDIRECTED:
+
                     # triple.schema_validated_direction = DirectionFlag.SOURCE_TO_DESTINATION
                     if RelationTypeEnum.TYPE_IS_VALID == relation_type:
                         triple.has_schema_match = True
@@ -282,7 +288,6 @@ class SchemaRules:
         """
         # When variable length patten is used, we do not correct the direction or validate the schema
         # (:Person)-[:WORKS_AT*]->(:Person), (:Person)-[:WORKS_AT*1..4]->(:Person)
-
         if triple.relation.variable_length:
             return True
         return False
@@ -308,10 +313,8 @@ class SchemaRules:
         if types_count==0 and negative_types_count==0:
             relation.valid_schema = schema
             relation.schema_validated_relation_type = RelationTypeEnum.TYPE_IS_EMPTY
-            # return RelationTypeFlag.TYPE_IS_EMPTY
 
         # If any type in negative types, then it is not valid, else valid
-
         elif negative_types_count>0:
             if schema.relation in relation.negative_types:
                 relation.schema_validated_relation_type =  RelationTypeEnum.NOT_VALID
@@ -326,7 +329,6 @@ class SchemaRules:
                 relation.schema_validated_relation_type =  RelationTypeEnum.TYPE_IS_VALID
 
         return relation.schema_validated_relation_type
-        # return RelationTypeFlag.NOT_VALID
 
     @staticmethod
     def has_at_least_one_intersection(list1: List[str], list2: List[str])->bool:
@@ -366,6 +368,7 @@ class SchemaRules:
             return ""
 
         return fixed_cypher
+
     @staticmethod
     def fix_arrow_direction_if_needed( triple: Triple, fixed_cypher: str) -> str:
         """Validates and fixes the arrow directions if necessary
@@ -392,6 +395,7 @@ class SchemaRules:
                     triple.relation.right_position1,
                 )
         return fixed_cypher
+
     @staticmethod
     def add_left_arrow(
         cypher, new_left_arrow_position, existing_right_arrow_position
@@ -416,6 +420,7 @@ class SchemaRules:
             cypher = SchemaRules.insert_char(cypher, new_left_arrow_position, "<")
 
         return cypher
+
     @staticmethod
     def add_right_arrow(
         cypher, existing_left_arrow_position, new_right_arrow_position
@@ -440,6 +445,7 @@ class SchemaRules:
             cypher = SchemaRules.insert_char(cypher, new_right_arrow_position, ">")
 
         return cypher
+
     @staticmethod
     def insert_char( cypher, index, char):
         """Inserts a character at a specific position in the string.
@@ -452,6 +458,7 @@ class SchemaRules:
         """
 
         return cypher[:index] + char + cypher[index:]
+
     @staticmethod
     def remove_char( cypher, index):
         """Removes a character at a specific position in the string.

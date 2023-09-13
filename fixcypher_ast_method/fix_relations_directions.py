@@ -202,13 +202,6 @@ class CypherParserListener(FixRelationsDirectionsListener):
 class MyErrorListener(ErrorListener):
     """ Custom error listener"""
 
-    #def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-    # def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-    #     lexer: Parser = recognizer
-    #     stack = lexer.getRuleInvocationStack()  # assuming recognizer is an instance of Parser
-    #     stack = stack[::-1]  # reverse the list
-    #     print(f"rule stack: {stack}", file=stderr)
-    #     print(f"line {line}:{column} at {offendingSymbol}: {msg}", file=stderr)
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
 
@@ -230,7 +223,7 @@ Lexer Error at line {line}:{column}:
 Message: {msg}
 Suggestion: {suggestion}
 """
-        print(error_msg) #raise Exception(error_msg)
+        print(error_msg)
 
     def suggest_fix(self, offendingSymbol, msg):
         """ This is a rudimentary example. In a real-world scenario, you might analyze the message or offendingSymbol

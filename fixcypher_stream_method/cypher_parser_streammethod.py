@@ -4,7 +4,6 @@ in cyphers e.g. (:Person)-[]->(:Car) could be changed to (:Person)<-[]-(:Car)
 
 """
 import io
-from typing import List
 from core.core_classes import (
     NodeFlag,
     Node,
@@ -26,6 +25,7 @@ class CypherParser:
 
     def __init__(self,cypher=None):
         self.triples_repository = TriplesRepository()
+        self.current_triple = None
         if cypher is not None:
             self.reset()
             self.set_cypher(cypher)
@@ -65,6 +65,7 @@ class CypherParser:
     STATUS_NO_COMPLETE_NODE_FOUND = "No complete node found"
 
     def set_cypher(self,cypher):
+        """ Sets cypher and set input stream"""
 
         self.input_stream = io.StringIO(cypher)
         self.cypher = cypher
@@ -154,7 +155,6 @@ class CypherParser:
         self.validate_if_next_is_a_node()
 
 
-
     def parse_if_node(self):
         """
         Check if the next character in the stream is a valid start of a node.
@@ -225,142 +225,123 @@ class CypherParser:
         Returns:
             Node: A new object of Relation Class
         """
+        rel = Relation()
 
-        relation_status = RelationFlag.NONE
-        types = []
-        negative_types = []
-        left = ""
-        left_position1 = -1
-        left_position2 = -1
+        rel.status = RelationFlag.NONE
+        rel.types = []
+        rel.negative_types = []
+        rel.left = ""
+        rel.left_position1 = -1
+        rel.left_position2 = -1
 
-        right = ""
-        right_position1 = -1
-        right_position2 = -1
+        rel.right = ""
+        rel.right_position1 = -1
+        rel.right_position2 = -1
 
-        variable_length = False
+        rel.variable_length = False
 
-        variable = ""
+        rel.variable = ""
 
         # Does it start with Hyphen (-)
         if self.current_character == CypherParser.HYPHEN:
-            left_position2 = self.position - 1
-            left += self.current_character
+            rel.left_position2 = self.position - 1
+            rel.left += self.current_character
 
             self.next_character()
             self.skip_whitespaces()
 
             # Is next bracket then the relation has a body
             if self.current_character == CypherParser.LBRACKET:
-                (
-                    types,
-                    negative_types,
-                    variable_length,
-                    variable,
-                ) = self.get_relation_body_inside_bracket()
 
-                if len(types) > 0:
-                    relation_status |= RelationFlag.HAS_TYPES
-                if len(negative_types) > 0:
-                    relation_status |= RelationFlag.HAS_NEGATIVE_TYPES
-                if variable != "":
-                    relation_status |= RelationFlag.HAS_VARIABLE
-                if variable_length is True:
-                    relation_status |= RelationFlag.HAS_VARIABLE_LENGTH
+                self.get_relation_body_inside_bracket(rel)
+                if rel.status & RelationFlag.NOT_VALID_RELATION:
+                    return rel
+
+                if len(rel.types) > 0:
+                    rel.status |= RelationFlag.HAS_TYPES
+                if len(rel.negative_types) > 0:
+                    rel.status |= RelationFlag.HAS_NEGATIVE_TYPES
+                if rel.variable != "":
+                    rel.status |= RelationFlag.HAS_VARIABLE
+                if rel.variable_length is True:
+                    rel.status |= RelationFlag.HAS_VARIABLE_LENGTH
 
             self.skip_whitespaces()
 
             # Is it an empty arrow
             if self.current_character == CypherParser.HYPHEN:
-                relation_status |= RelationFlag.RELATION_FOUND
-                right_position1 = self.position - 1
-                right += self.current_character
+                rel.status |= RelationFlag.RELATION_FOUND
+                rel.right_position1 = self.position - 1
+                rel.right += self.current_character
 
                 self.next_character()
                 self.skip_whitespaces()
 
                 # Ends with right (>)
                 if self.current_character == CypherParser.RIGHT:
-                    right_position2 = self.position - 1
-                    right += self.current_character
+                    rel.right_position2 = self.position - 1
+                    rel.right += self.current_character
                     self.next_character()
-            rel = Relation()
 
-            rel.status = relation_status
-            rel.types = types
-            rel.negative_types = negative_types
-            rel.variable = variable
-            rel.variable_length = variable_length
-            rel.left = left
-            rel.left_position1 = left_position1
-            rel.left_position2 = left_position2
-            rel.right = right
-            rel.right_position1 = right_position1
-            rel.right_position2 = right_position2
+            else:
+                rel.status = RelationFlag.NOT_VALID_RELATION
+                return rel
 
             return rel
 
         # Starts with left (<)
         if self.current_character == CypherParser.LEFT:
-            left_position1 = self.position - 1
-            left += self.current_character
+            rel.left_position1 = self.position - 1
+            rel.left += self.current_character
 
             self.next_character()
             self.skip_whitespaces()
 
             # Is it an empty arrow
             if self.current_character == CypherParser.HYPHEN:
-                left_position2 = self.position - 1
-                left += self.current_character
+                rel.left_position2 = self.position - 1
+                rel.left += self.current_character
 
                 self.next_character()
                 self.skip_whitespaces()
 
                 # Is next bracket then the relation has a body
                 if self.current_character == CypherParser.LBRACKET:
-                    (
-                        types,
-                        negative_types,
-                        variable_length,
-                        variable,
-                    ) = self.get_relation_body_inside_bracket()
+                    self.get_relation_body_inside_bracket(rel)
 
-                    if len(types) > 0:
-                        relation_status |= RelationFlag.HAS_TYPES
-                    if len(negative_types) > 0:
-                        relation_status |= RelationFlag.HAS_NEGATIVE_TYPES
-                    if variable != "":
-                        relation_status |= RelationFlag.HAS_VARIABLE
-                    if variable_length is True:
-                        relation_status |= RelationFlag.HAS_VARIABLE_LENGTH
+                    if rel.status & RelationFlag.NOT_VALID_RELATION:
+                        return rel
+
+                    if len(rel.types) > 0:
+                        rel.status |= RelationFlag.HAS_TYPES
+                    if len(rel.negative_types) > 0:
+                        rel.status |= RelationFlag.HAS_NEGATIVE_TYPES
+                    if rel.variable != "":
+                        rel.status |= RelationFlag.HAS_VARIABLE
+                    if rel.variable_length is True:
+                        rel.status |= RelationFlag.HAS_VARIABLE_LENGTH
 
                 self.skip_whitespaces()
 
                 # Is it an empty arrow
                 if self.current_character == CypherParser.HYPHEN:
-                    relation_status |= RelationFlag.RELATION_FOUND
-                    right_position1 = self.position - 1
-                    right += self.current_character
+                    rel.status |= RelationFlag.RELATION_FOUND
+                    rel.right_position1 = self.position - 1
+                    rel.right += self.current_character
 
                     self.next_character()
                     self.skip_whitespaces()
+                else:
+                    rel.status = RelationFlag.NOT_VALID_RELATION
+                    return rel
 
-        rel = Relation()
-
-        rel.status = relation_status
-        rel.types = types
-        rel.negative_types = negative_types
-        rel.variable = variable
-        rel.variable_length = variable_length
-        rel.left = left
-        rel.left_position1 = left_position1
-        rel.left_position2 = left_position2
-        rel.right = right
-        rel.right_position1 = right_position1
-        rel.right_position2 = right_position2
+            else:
+                rel.status = RelationFlag.NOT_VALID_RELATION
+                return rel
 
         return rel
 
-    def get_relation_body_inside_bracket(self):
+    def get_relation_body_inside_bracket(self,rel:Relation):
         """Parses the relation information inside bracket [....]
 
         Returns:
@@ -369,34 +350,38 @@ class CypherParser:
             variable_length: if there is a variable length set
             variable: the name of the variable
         """
-        types = []
-        negative_types = []
-        variable_length = False
-        variable = ""
+        rel.types = []
+        rel.negative_types = []
+        rel.variable_length = False
+        rel.variable = ""
 
         if self.current_character != CypherParser.LBRACKET:
-            return types, negative_types, variable_length, variable
+            rel.status = RelationFlag.NOT_VALID_RELATION
+            return
 
         self.next_character()
         self.skip_whitespaces()
 
         # Find variable of node
-        variable = self.get_cypher_word()
+        rel.variable = self.get_cypher_word()
 
         self.skip_whitespaces()
 
-        types, negative_types = self.find_types()
+        rel.types, rel.negative_types = self.find_types()
 
         self.skip_whitespaces()
 
-        variable_length = self.skip_variable_length()
+        rel.variable_length = self.skip_variable_length()
         self.skip_whitespaces()
         self.skip_property_block()
         self.skip_whitespaces()
         if self.current_character == CypherParser.RBRACKET:
             self.next_character()
+        else:
+            rel.status = RelationFlag.NOT_VALID_RELATION
+            return
 
-        return types, negative_types, variable_length, variable
+        return
 
     def find_variable(self):
         """Get a variable if there is any
@@ -568,7 +553,7 @@ class CypherParser:
 
         word = ""
         if self.current_character == CypherParser.BACKTICK:
-            # self.word = self.current_character
+
             self.next_character()
             self.word = self.current_character
             while True:
@@ -576,7 +561,6 @@ class CypherParser:
                 if self.current_character != CypherParser.BACKTICK:
                     word = self.word
                 else:
-                    # word = self.word
                     self.next_character()
                     self.reset_word()
                     return word
@@ -661,4 +645,3 @@ class CypherParser:
         word = self.word
         self.word = ""
         return word
-

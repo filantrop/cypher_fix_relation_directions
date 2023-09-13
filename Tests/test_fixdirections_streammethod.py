@@ -463,12 +463,13 @@ def test_RelationBodyWithOnlyVariable_ShouldReturnValidVariable():
     cp = CypherParser(cypher)
     cp.next_character()
 
-    types, negative_types,variable_length,variable = cp.get_relation_body_inside_bracket()
+    rel = Relation()
+    cp.get_relation_body_inside_bracket(rel)
 
-    assert len(types)==0
-    assert len(negative_types)==0
-    assert variable_length is False
-    assert variable == 'r'
+    assert len(rel.types)==0
+    assert len(rel.negative_types)==0
+    assert rel.variable_length is False
+    assert rel.variable == 'r'
 
 # Simple Cypher relation body with variable and labels
 def test_RelationBodyWithVariableAndLabel_ShouldReturnValidVariable():
@@ -477,12 +478,13 @@ def test_RelationBodyWithVariableAndLabel_ShouldReturnValidVariable():
     cp = CypherParser(cypher)
     cp.next_character()
 
-    types, negative_types,variable_length,variable = cp.get_relation_body_inside_bracket()
+    rel = Relation()
+    cp.get_relation_body_inside_bracket(rel)
 
-    assert types[0]=='Relation'
-    assert len(negative_types)==0
-    assert variable_length is False
-    assert variable == 'r'
+    assert rel.types[0]=='Relation'
+    assert len(rel.negative_types)==0
+    assert rel.variable_length is False
+    assert rel.variable == 'r'
 
 # Cypher relation with full body
 def test_RelationWithFullBody_ShouldReturnValidVariable():
@@ -491,13 +493,14 @@ def test_RelationWithFullBody_ShouldReturnValidVariable():
     cp = CypherParser(cypher)
     cp.next_character()
 
-    types, negative_types,variable_length,variable = cp.get_relation_body_inside_bracket()
+    rel = Relation()
+    cp.get_relation_body_inside_bracket(rel)
 
-    assert types[0]=='MyRel Type'
-    assert negative_types[0] == 'Relation'
-    assert negative_types[1] == 'Rel'
-    assert variable_length is True
-    assert variable == 'r'
+    assert rel.types[0]=='MyRel Type'
+    assert rel.negative_types[0] == 'Relation'
+    assert rel.negative_types[1] == 'Rel'
+    assert rel.variable_length is True
+    assert rel.variable == 'r'
 
 
 # Find cypher relation types
@@ -1193,7 +1196,7 @@ RETURN d.name
 """
 
     fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
-    assert fixed_cypher == correct_query
+    assert fixed_cypher == ""
 
 
 # Check schema does not match
@@ -1209,6 +1212,54 @@ RETURN d.name
 
     correct_query = """
 MATCH (d:Person)-[:DIRECTED]-(m:Movie)
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+
+def test_17_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)-[:DIRECTED]-(m:Movie
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    correct_query = """
+MATCH (d:Person)-[:DIRECTED]-(m:Movie)
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+# Check schema does not match
+def test_18_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH d:Person)-[:DIRECTED]-(m:Movie)
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+# Check schema does not match
+def test_19_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)-[:DIRECTED](m:Movie)
 WHERE m.year = 2000 AND g.name = "Horror"
 RETURN d.name
 """

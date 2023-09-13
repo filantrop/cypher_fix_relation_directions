@@ -3,16 +3,10 @@ This module contains a function to fix directions of the arrows
 in cyphers e.g. (:Person)-[]->(:Car) could be changed to (:Person)<-[]-(:Car)
 
 """
-#from sys import *
-#from io import FileIO
 from antlr4 import InputStream,CommonTokenStream,ParseTreeWalker
-#from antlr4.tree.Trees import Trees
-# from antlr4.error.ErrorListener import ErrorListener
 from fixcypher_ast_method.fix_relations_directions  import MyErrorListener,CypherParserListener
 from core.core_classes import SchemaParser
 from core.schema_rules import SchemaRules
-
-# from parse_antlr_to_neo4j.language.hello.FixRelationsDirectionsListener import FixRelationsDirectionsListener
 from parse_antlr_to_cypher.FixRelationsDirectionsParser import FixRelationsDirectionsParser
 from parse_antlr_to_cypher.FixRelationsDirectionsLexer import FixRelationsDirectionsLexer
 
@@ -22,8 +16,6 @@ class FixDirections():
     @staticmethod
     def fix_cypher_relations_directions(cypher, schema)->str:
         """Validates the relations directions in the cypher with the schema and outputs a fixed cypher
-
-
         Args:
             cypher (str): the cypher to be fixed
             schema (str): the schema to validate against

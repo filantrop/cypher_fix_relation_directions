@@ -15,16 +15,16 @@ def json_serializable(cls):
     assuming all attributes of the class are JSON serializable.
     """
     def to_json(self):
-            if isinstance(self, (Enum, IntFlag)):
-                return self.name
-            result = {}
-            for k, v in vars(self).items():
-                if not k.startswith('_'):
-                    if hasattr(v, 'to_json'):
-                        result[k] = v.to_json()
-                    else:
-                        result[k] = v
-            return result
+        if isinstance(self, (Enum, IntFlag)):
+            return self.name
+        result = {}
+        for k, v in vars(self).items():
+            if not k.startswith('_'):
+                if hasattr(v, 'to_json'):
+                    result[k] = v.to_json()
+                else:
+                    result[k] = v
+        return result
 
     def to_json_string(self, indent=4):
         return json.dumps(self.to_json(), indent=indent)
@@ -63,6 +63,7 @@ class RelationFlag(IntFlag):
     HAS_TYPES = auto()
     HAS_ANY_TYPES = HAS_TYPES | HAS_NEGATIVE_TYPES
     HAS_VARIABLE_LENGTH = auto()
+    NOT_VALID_RELATION = auto()
 
 @json_serializable
 class DirectionFlag(IntFlag):
@@ -145,8 +146,7 @@ class Triple:
         self.relation = relation
         self.second_node = second_node
         self.direction = DirectionFlag.NOT_SET
-        #self.schema_validated_relation_type = False
-        #self.change_direction = False
+
         # When one of the schemas matches source label, relation type and destination label in any order
         self.has_schema_match = False
         self.schema_validated_direction = DirectionFlag.NOT_SET

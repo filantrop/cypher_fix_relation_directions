@@ -1,5 +1,3 @@
-from sys import *
-#from io import FileIO
 from antlr4 import InputStream,CommonTokenStream,ParseTreeWalker
 from antlr4.error.ErrorListener import ConsoleErrorListener,ErrorListener
 
@@ -21,24 +19,28 @@ class CypherParser:
     """
 
     def __init__(self):
+        self.cypher = None
         self.antlr_listener = CypherParserListener()
         self.triples_repository = self.antlr_listener.triples_repository
 
     def reset(self):
+        """ Reset repository """
         self.triples_repository.reset()
 
-    def find_and_prepare_all_triples(self, cypher):
-        self.reset()
+    def find_and_prepare_all_triples(self, cypher:str):
         """Finds all triples in the actual Cypher"""
+
+        self.reset()
         self.cypher = cypher
+
         # Parse cypher and find all triples (n:Person)-[:WORKS_AT]->(:Department)
         self.find_triples()
-        #self.triples_repository.prepare_all_triples()
+
 
     def find_triples(self):
         """ Find all triples in the cypher"""
 
-        #my_parser_error_listener = MyErrorListener()
+
         inputStream = InputStream(self.cypher)
 
         lexer = FixRelationsDirectionsLexer(inputStream)

@@ -415,7 +415,7 @@ RETURN d.name
 """
 
     fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
-    assert fixed_cypher == correct_query
+    assert fixed_cypher == ""
 
 
 # Check schema does not match
@@ -431,6 +431,54 @@ RETURN d.name
 
     correct_query = """
 MATCH (d:Person)-[:DIRECTED]-(m:Movie)
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+# Check schema does not match
+def test_17_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)-[:DIRECTED]-(m:Movie
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    correct_query = """
+MATCH (d:Person)-[:DIRECTED]-(m:Movie
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+# Check schema does not match
+def test_18_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH d:Person)-[:DIRECTED]-(m:Movie)
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == ""
+
+# Check schema does not match
+def test_19_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)-[:DIRECTED](m:Movie)
 WHERE m.year = 2000 AND g.name = "Horror"
 RETURN d.name
 """
