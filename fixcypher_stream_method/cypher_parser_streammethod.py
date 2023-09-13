@@ -196,7 +196,8 @@ class CypherParser:
         self.skip_whitespaces()
         self.skip_escape_signs()
 
-        self.skip_property_block()
+        if self.skip_property_block() is False:
+            return Node("", [], NodeFlag.NODE_NOT_FOUND)
 
         if self.current_character == CypherParser.RPARENTHESIS:
             self.next_character()
@@ -373,7 +374,9 @@ class CypherParser:
 
         rel.variable_length = self.skip_variable_length()
         self.skip_whitespaces()
-        self.skip_property_block()
+        if self.skip_property_block() is False:
+            rel.status = RelationFlag.NOT_VALID_RELATION
+            return
         self.skip_whitespaces()
         if self.current_character == CypherParser.RBRACKET:
             self.next_character()
@@ -519,13 +522,14 @@ class CypherParser:
         while True:
             self.next_character()
 
-            self.skip_property()
+            if self.skip_property() is False:
+                return False
 
             if self.current_character == CypherParser.RCURLY:
                 self.next_character()
-                return
-            if self.current_character is None:
-                return
+                return True
+            if self.current_character is None or self.current_character is '':
+                return False
 
     def skip_property(self):
         """ Skips the properties in the { Name: 'Value'}"""
@@ -536,13 +540,17 @@ class CypherParser:
         if self.current_character == CypherParser.COLON:
             self.next_character()
             self.skip_whitespaces()
-            self.skip_property_value()
+            if self.skip_property_value() is False:
+                return False
             self.skip_whitespaces()
             if self.current_character == CypherParser.COMMA:
                 self.next_character()
-                self.skip_property()
-            return
-        return
+                if self.skip_property() is False:
+                    return False
+            return True
+        else:
+            return False
+        return True
 
     def skip_property_name(self):
         """ Skips property name"""
@@ -579,8 +587,10 @@ class CypherParser:
 
     def skip_property_value(self):
         """ Skips property value, eight single or double quotation"""
-        self.skip_quotation()
-        self.skip_double_quotation()
+        if self.skip_quotation() is False:
+            if self.skip_double_quotation() is False:
+                return False
+        return True
 
     def skip_quotation(self):
         """ Skips quotation with content"""
@@ -590,9 +600,11 @@ class CypherParser:
                 self.skip_escape_signs()
                 if self.current_character == "'":
                     self.next_character()
-                    return
+                    return True
                 self.next_character()
-        return
+                if self.current_character == '':
+                    return False
+        return False
 
     def skip_double_quotation(self):
         """ Skips double quotation"""
@@ -602,9 +614,11 @@ class CypherParser:
                 self.skip_escape_signs()
                 if self.current_character == '"':
                     self.next_character()
-                    return
+                    return True
                 self.next_character()
-        return
+                if self.current_character == '':
+                    return False
+        return False
 
     def is_valid_start_variable_character(self, char):
         """ Checks if the character is a start of a valid variable"""
