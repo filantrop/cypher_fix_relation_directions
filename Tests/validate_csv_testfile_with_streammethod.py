@@ -3,7 +3,13 @@
 Returns:
     _type_: _description_
 """
-import os,timeit
+import os,sys
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__),
+                  os.pardir)
+)
+sys.path.append(PROJECT_ROOT)
+import timeit
 import pandas as pd
 from core.core_classes import SchemaParser
 from core.schema_rules import SchemaRules

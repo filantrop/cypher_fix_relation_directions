@@ -3,15 +3,23 @@
 Returns:
     _type_: _description_
 """
-import os, timeit
+import os, sys
+
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__),
+                  os.pardir)
+)
+sys.path.append(PROJECT_ROOT)
+import timeit
 import pandas as pd
 from core.core_classes import SchemaParser
 from core.schema_rules import SchemaRules
 from fixcypher_ast_method.fixdirections_astmethod import FixDirections
+
+
 # from fixcypher_ast_method.cypher_parser_ast_method import CypherParser
 
 schema_parser = SchemaParser()
-# cypher_parser = CypherParser()
 
 
 def do_work_on_testdata(df,verbose=0):
