@@ -6,7 +6,7 @@ Install as package in root with:</br>
 <code> pip install . </code>
 
 ### If windows environment
-Run <code>aliassetup.bat</code> to set aliases in windows cmd or powershell
+Run <code>aliassetup.bat</code> to set aliases in windows cmd
 
 
 ## There is two solutions, Native and AST

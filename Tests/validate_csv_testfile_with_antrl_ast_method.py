@@ -17,9 +17,9 @@ schema_parser = SchemaParser()
 def do_work_on_testdata(df,verbose=0):
 
     errors = []
-
+    count = None
     for index, row in df.iterrows():
-
+        count = index+1
         # Debugging row
         # if(index+1!=60):
         #     continue
@@ -88,7 +88,7 @@ def do_work_on_testdata(df,verbose=0):
     if len(errors)>0:
         p(f"The following rows has errors: {errors}",1)
     else:
-        p("All testcases has passed")
+        p(f"All {count} testcases has passed")
 def to_string(data):
     if isinstance(data, list):
         return [str(item) for item in data]

@@ -26,6 +26,8 @@ class CypherParserListener(FixRelationsDirectionsListener):
         return False
 
 
+
+
     def enterTriple(self, ctx: FixRelationsDirectionsParser.TripleContext):
         """ Enters triple from ANTLR framework.
             DO NOT CHANGE FUNCTION NAME

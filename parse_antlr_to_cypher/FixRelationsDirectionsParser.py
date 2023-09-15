@@ -1,4 +1,4 @@
-# Generated from FixRelationsDirections.g4 by ANTLR 4.13.0
+# Generated from .\parse_antlr_to_cypher\FixRelationsDirections.g4 by ANTLR 4.13.0
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,25,136,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,25,144,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,1,0,1,0,5,0,25,8,0,10,0,12,0,
         28,9,0,1,1,1,1,1,1,1,1,5,1,34,8,1,10,1,12,1,37,9,1,1,2,3,2,40,8,
         2,1,2,1,2,1,3,1,3,5,3,46,8,3,10,3,12,3,49,9,3,1,3,1,3,1,4,1,4,1,
@@ -20,18 +20,19 @@ def serializedATN():
         7,1,7,1,7,3,7,99,8,7,1,8,1,8,3,8,103,8,8,1,8,1,8,3,8,107,8,8,1,8,
         1,8,1,8,1,8,3,8,113,8,8,1,8,3,8,116,8,8,1,8,3,8,119,8,8,1,9,1,9,
         1,9,1,9,5,9,125,8,9,10,9,12,9,128,9,9,1,9,1,9,1,10,1,10,1,10,1,10,
-        1,10,1,47,0,11,0,2,4,6,8,10,12,14,16,18,20,0,0,146,0,26,1,0,0,0,
-        2,29,1,0,0,0,4,39,1,0,0,0,6,47,1,0,0,0,8,52,1,0,0,0,10,62,1,0,0,
-        0,12,84,1,0,0,0,14,98,1,0,0,0,16,118,1,0,0,0,18,120,1,0,0,0,20,131,
-        1,0,0,0,22,23,5,12,0,0,23,25,5,21,0,0,24,22,1,0,0,0,25,28,1,0,0,
-        0,26,24,1,0,0,0,26,27,1,0,0,0,27,1,1,0,0,0,28,26,1,0,0,0,29,30,5,
-        12,0,0,30,35,3,4,2,0,31,32,5,20,0,0,32,34,3,4,2,0,33,31,1,0,0,0,
-        34,37,1,0,0,0,35,33,1,0,0,0,35,36,1,0,0,0,36,3,1,0,0,0,37,35,1,0,
-        0,0,38,40,5,19,0,0,39,38,1,0,0,0,39,40,1,0,0,0,40,41,1,0,0,0,41,
-        42,5,21,0,0,42,5,1,0,0,0,43,46,3,8,4,0,44,46,9,0,0,0,45,43,1,0,0,
-        0,45,44,1,0,0,0,46,49,1,0,0,0,47,48,1,0,0,0,47,45,1,0,0,0,48,50,
-        1,0,0,0,49,47,1,0,0,0,50,51,5,0,0,1,51,7,1,0,0,0,52,58,3,16,8,0,
-        53,54,3,10,5,0,54,55,3,16,8,0,55,57,1,0,0,0,56,53,1,0,0,0,57,60,
+        1,10,1,10,4,10,138,8,10,11,10,12,10,139,3,10,142,8,10,1,10,1,47,
+        0,11,0,2,4,6,8,10,12,14,16,18,20,0,1,2,0,9,9,15,15,156,0,26,1,0,
+        0,0,2,29,1,0,0,0,4,39,1,0,0,0,6,47,1,0,0,0,8,52,1,0,0,0,10,62,1,
+        0,0,0,12,84,1,0,0,0,14,98,1,0,0,0,16,118,1,0,0,0,18,120,1,0,0,0,
+        20,141,1,0,0,0,22,23,5,12,0,0,23,25,5,21,0,0,24,22,1,0,0,0,25,28,
+        1,0,0,0,26,24,1,0,0,0,26,27,1,0,0,0,27,1,1,0,0,0,28,26,1,0,0,0,29,
+        30,5,12,0,0,30,35,3,4,2,0,31,32,5,20,0,0,32,34,3,4,2,0,33,31,1,0,
+        0,0,34,37,1,0,0,0,35,33,1,0,0,0,35,36,1,0,0,0,36,3,1,0,0,0,37,35,
+        1,0,0,0,38,40,5,19,0,0,39,38,1,0,0,0,39,40,1,0,0,0,40,41,1,0,0,0,
+        41,42,5,21,0,0,42,5,1,0,0,0,43,46,3,8,4,0,44,46,9,0,0,0,45,43,1,
+        0,0,0,45,44,1,0,0,0,46,49,1,0,0,0,47,48,1,0,0,0,47,45,1,0,0,0,48,
+        50,1,0,0,0,49,47,1,0,0,0,50,51,5,0,0,1,51,7,1,0,0,0,52,58,3,16,8,
+        0,53,54,3,10,5,0,54,55,3,16,8,0,55,57,1,0,0,0,56,53,1,0,0,0,57,60,
         1,0,0,0,58,56,1,0,0,0,58,59,1,0,0,0,59,9,1,0,0,0,60,58,1,0,0,0,61,
         63,5,11,0,0,62,61,1,0,0,0,62,63,1,0,0,0,63,64,1,0,0,0,64,65,5,13,
         0,0,65,66,3,12,6,0,66,68,5,13,0,0,67,69,5,10,0,0,68,67,1,0,0,0,68,
@@ -53,9 +54,11 @@ def serializedATN():
         0,120,121,5,8,0,0,121,126,3,20,10,0,122,123,5,15,0,0,123,125,3,20,
         10,0,124,122,1,0,0,0,125,128,1,0,0,0,126,124,1,0,0,0,126,127,1,0,
         0,0,127,129,1,0,0,0,128,126,1,0,0,0,129,130,5,9,0,0,130,19,1,0,0,
-        0,131,132,5,21,0,0,132,133,5,12,0,0,133,134,5,22,0,0,134,21,1,0,
-        0,0,20,26,35,39,45,47,58,62,68,72,75,78,81,84,98,102,106,112,115,
-        118,126
+        0,131,132,5,21,0,0,132,133,5,12,0,0,133,142,5,22,0,0,134,135,5,21,
+        0,0,135,137,5,12,0,0,136,138,8,0,0,0,137,136,1,0,0,0,138,139,1,0,
+        0,0,139,137,1,0,0,0,139,140,1,0,0,0,140,142,1,0,0,0,141,131,1,0,
+        0,0,141,134,1,0,0,0,142,21,1,0,0,0,22,26,35,39,45,47,58,62,68,72,
+        75,78,81,84,98,102,106,112,115,118,126,139,141
     ]
 
 class FixRelationsDirectionsParser ( Parser ):
@@ -973,6 +976,18 @@ class FixRelationsDirectionsParser ( Parser ):
         def STRING(self):
             return self.getToken(FixRelationsDirectionsParser.STRING, 0)
 
+        def COMMA(self, i:int=None):
+            if i is None:
+                return self.getTokens(FixRelationsDirectionsParser.COMMA)
+            else:
+                return self.getToken(FixRelationsDirectionsParser.COMMA, i)
+
+        def RBRACE(self, i:int=None):
+            if i is None:
+                return self.getTokens(FixRelationsDirectionsParser.RBRACE)
+            else:
+                return self.getToken(FixRelationsDirectionsParser.RBRACE, i)
+
         def getRuleIndex(self):
             return FixRelationsDirectionsParser.RULE_prop
 
@@ -991,14 +1006,47 @@ class FixRelationsDirectionsParser ( Parser ):
 
         localctx = FixRelationsDirectionsParser.PropContext(self, self._ctx, self.state)
         self.enterRule(localctx, 20, self.RULE_prop)
+        self._la = 0 # Token type
         try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 131
-            self.match(FixRelationsDirectionsParser.NAME)
-            self.state = 132
-            self.match(FixRelationsDirectionsParser.COLON)
-            self.state = 133
-            self.match(FixRelationsDirectionsParser.STRING)
+            self.state = 141
+            self._errHandler.sync(self)
+            la_ = self._interp.adaptivePredict(self._input,21,self._ctx)
+            if la_ == 1:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 131
+                self.match(FixRelationsDirectionsParser.NAME)
+                self.state = 132
+                self.match(FixRelationsDirectionsParser.COLON)
+                self.state = 133
+                self.match(FixRelationsDirectionsParser.STRING)
+                pass
+
+            elif la_ == 2:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 134
+                self.match(FixRelationsDirectionsParser.NAME)
+                self.state = 135
+                self.match(FixRelationsDirectionsParser.COLON)
+                self.state = 137 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                while True:
+                    self.state = 136
+                    _la = self._input.LA(1)
+                    if _la <= 0 or _la==9 or _la==15:
+                        self._errHandler.recoverInline(self)
+                    else:
+                        self._errHandler.reportMatch(self)
+                        self.consume()
+                    self.state = 139 
+                    self._errHandler.sync(self)
+                    _la = self._input.LA(1)
+                    if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 67075582) != 0)):
+                        break
+
+                pass
+
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

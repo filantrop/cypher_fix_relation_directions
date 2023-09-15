@@ -528,7 +528,7 @@ class CypherParser:
             if self.current_character == CypherParser.RCURLY:
                 self.next_character()
                 return True
-            if self.current_character is None or self.current_character is '':
+            if self.current_character is None or self.current_character == '':
                 return False
 
     def skip_property(self):
@@ -589,8 +589,26 @@ class CypherParser:
         """ Skips property value, eight single or double quotation"""
         if self.skip_quotation() is False:
             if self.skip_double_quotation() is False:
-                return False
+                if self.skip_non_qoute() is False:
+                    return False
         return True
+
+    def skip_non_qoute(self):
+        """ Skips non quote characters"""
+        if self.current_character not in [',','}']:
+            self.skip_whitespaces()
+            self.next_character()
+            while True:
+                if self.current_character in ["'",'"']:
+                    return False
+
+                if self.current_character in [',','}']:
+                    return True
+
+                elif self.current_character == '':
+                    return False
+                self.next_character()
+
 
     def skip_quotation(self):
         """ Skips quotation with content"""

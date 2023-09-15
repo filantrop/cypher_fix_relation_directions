@@ -512,16 +512,78 @@ def test_21_validate_test_cypher():
     schema = '(Person,DIRECTED,Movie)'
 
     orginal_query = """
-MATCH (d:Person)-[:DIRECTED](m:Movie) MATCH (d:Person)<-[:DIRECTED]-(m:Movie {Test=test'})
+MATCH (d:Person)-[:DIRECTED](m:Movie) MATCH (d:Person)<-[:DIRECTED]-(m:Movie {Test: 'test'})
 WHERE m.year = 2000 AND g.name = "Horror"
 RETURN d.name
 """
 
     correct_query = """
-MATCH (d:Person)-[:DIRECTED](m:Movie) MATCH (d:Person)-[:DIRECTED]->(m:Movie {Test='test')
+MATCH (d:Person)-[:DIRECTED](m:Movie) MATCH (d:Person)-[:DIRECTED]->(m:Movie {Test: 'test'})
 WHERE m.year = 2000 AND g.name = "Horror"
 RETURN d.name
 """
 
     fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
-    assert fixed_cypher == ""
+    assert fixed_cypher == correct_query
+
+# Check a property with not quotes work
+def test_22_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)-[:DIRECTED]->(m:Movie) MATCH (d:Person)<-[:DIRECTED]-(m:Movie {Test:   'test'})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    correct_query = """
+MATCH (d:Person)-[:DIRECTED]->(m:Movie) MATCH (d:Person)-[:DIRECTED]->(m:Movie {Test:   'test'})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == correct_query
+
+# Check a property with not quotes work
+def test_23_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)<-[:DIRECTED]-(m:Movie {Test: test})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    correct_query = """
+MATCH (d:Person)-[:DIRECTED]->(m:Movie {Test: test})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == correct_query
+
+
+# Check a property with not quotes work
+def test_24_validate_test_cypher():
+
+    schema = '(Person,DIRECTED,Movie)'
+
+    orginal_query = """
+MATCH (d:Person)<-[:DIRECTED]-(m:Movie {Test: [test]})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    correct_query = """
+MATCH (d:Person)-[:DIRECTED]->(m:Movie {Test: [test]})
+WHERE m.year = 2000 AND g.name = "Horror"
+RETURN d.name
+"""
+
+    fixed_cypher = FixDirections.fix_cypher_relations_directions(orginal_query, schema)
+    assert fixed_cypher == correct_query
+

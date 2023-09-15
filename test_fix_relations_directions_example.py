@@ -27,6 +27,9 @@ fixed_with_ast =fix_ast.fix_cypher_relations_directions(cypher,schema)
 assert fixed_with_ast==true_cypher
 fixed_with_stream = fix_stream.fix_cypher_relations_directions(cypher,schema)
 assert fixed_with_stream==true_cypher
+print("Schema:")
+print(schema)
+print()
 
 print("Origanal cypher:")
 print(cypher)

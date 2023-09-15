@@ -37,6 +37,7 @@ NAME
 STRING
     : '\'' ~('\'')* '\''
     | '"' ~('"')* '"'
+    //| ~([}])+
     ;
 
 // label
@@ -103,4 +104,5 @@ props
     ;
 prop
     : NAME COLON STRING
+    | NAME COLON ~(','|RBRACE)+
     ;
